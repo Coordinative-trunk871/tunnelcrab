@@ -8,6 +8,20 @@ Add a link or subscription, choose a server and press one button.
 The crab reacts to the connection state, errors are explained in plain language and the technical details stay out of the way
 *[Русская версия ниже](#ru)*
 
+## Screenshots
+
+<p align="center">
+  <img src="assets/screenshot-main.png" alt="TunnelCrab main screen" width="720">
+</p>
+
+<p align="center">
+  <img src="assets/screenshot-servers.png" alt="TunnelCrab servers screen" width="720">
+</p>
+
+<p align="center">
+  <img src="assets/screenshot-about.png" alt="TunnelCrab about screen" width="720">
+</p>
+
 ## Download
 
 TunnelCrab is distributed as a ready-to-use Windows installer through the official
