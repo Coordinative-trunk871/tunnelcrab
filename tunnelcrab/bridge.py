@@ -16,7 +16,7 @@ from .i18n import VALID_LANGUAGES, t as _translate
 from .platform import is_admin, is_windows, minimize_window
 from .profile import ProfileError, load_profile
 from .profiles import ProfileStoreError, get_profile, load_profiles
-from .runtime import VpnRuntime
+from .runtime import VpnRuntime, log_event
 from .settings import load_settings, save_settings
 from .startup import is_startup_enabled, set_startup_enabled
 from .sysproxy import cleanup_stale_proxy
@@ -85,7 +85,7 @@ class AppController:
         self._closing = False
         self.events = []
         self.update_info = {"available": False}
-        self._event(self._t("event.woke_up"))
+        self._event("event.woke_up")
 
         self.state = {
             "phase": "idle",
@@ -143,7 +143,7 @@ class AppController:
         if self.tray.available:
             self.tray.start()
         if self.connect_on_startup or self.settings.auto_connect_on_launch:
-            self._event(self._t("event.autoconnect"))
+            self._event("event.autoconnect")
             self.connect()
 
         if self.settings.auto_update:
@@ -159,7 +159,7 @@ class AppController:
             return
         self.update_info = info or {"available": False}
         if self.update_info.get("available"):
-            self._event(self._t("event.new_version", version=self.update_info.get("version", "")))
+            self._event("event.new_version", version=self.update_info.get("version", ""))
 
     def _background_refresh_subscriptions(self):
         try:
@@ -169,7 +169,7 @@ class AppController:
         total = sum(count for _sid, count, err in results if not err)
         if total:
             self._reload(self._selected_id())
-            self._event(self._t("event.subs_refreshed", total=total))
+            self._event("event.subs_refreshed", total=total)
 
 
     def _pick_initial_profile(self):
@@ -194,15 +194,26 @@ class AppController:
         params = s.get("params") or {}
         status = self._t(s["status_key"], **params) if s.get("status_key") else ""
         helper = self._t(s["helper_key"], **params) if s.get("helper_key") else ""
-        return {"phase": s.get("phase", "idle"), "status": status, "helper": helper, "ip": s.get("ip", "")}
+        ip = s.get("ip", "")
+        if s.get("phase") == "connected" and not ip:
+            ip = self._t("ip.protected")
+        return {"phase": s.get("phase", "idle"), "status": status, "helper": helper, "ip": ip}
 
-    def _event(self, message):
-        self.events.append({"t": time.strftime("%H:%M:%S"), "msg": message})
+    def _event(self, key, **params):
+        params = {name: str(value) for name, value in params.items()}
+        if self.events:
+            last = self.events[-1]
+            if last["key"] == key and last["params"] == params:
+                return
+        self.events.append({"t": time.strftime("%H:%M:%S"), "key": key, "params": params})
         if len(self.events) > 80:
             self.events = self.events[-80:]
 
     def get_events(self):
-        return self.events
+        return [
+            {"t": entry["t"], "msg": self._t(entry["key"], **entry["params"])}
+            for entry in self.events
+        ]
 
     def crab_frames(self):
         if self._crab_cache is None:
@@ -301,26 +312,34 @@ class AppController:
 
     def metrics(self):
         report = self.runtime.live_metrics()
-        return _dataclass_to_dict(report)
+        data = _dataclass_to_dict(report)
+        if data and data.get("quality"):
+            data["quality"] = self._t(data["quality"])
+        return data
 
 
     def toggle(self):
+        log_event("ui_toggle", f"phase={self.state['phase']}")
         if self.state["phase"] in ("connecting", "connected", "waiting"):
             return self.disconnect()
         return self.connect()
 
     def connect(self):
         if self.selected is None:
+            log_event("connect_no_profile")
             self._set_state(
                 "idle",
                 "status.add_server_first",
                 "helper.add_subscription_hint",
             )
-            self._event(self._t("event.no_servers"))
+            self._event("event.no_servers")
             self._sync_tray()
             return {"ok": False, "error": "no_profile"}
-        if self.state["phase"] in ("connecting", "connected", "waiting", "disconnecting"):
+        if self.state["phase"] in ("connecting", "connected", "waiting"):
+            log_event("connect_ignored", f"phase={self.state['phase']}")
             return {"ok": True, "ignored": True}
+        self._set_state("connecting", "status.connecting", "helper.connecting")
+        self._sync_tray()
         self.conn.start()
         return {"ok": True}
 
@@ -329,7 +348,7 @@ class AppController:
         self.conn.stop()
         self._set_state("idle", "status.idle_ready")
         if was:
-            self._event(self._t("event.disconnected"))
+            self._event("event.disconnected")
         self._sync_tray()
         return {"ok": True}
 
@@ -343,10 +362,10 @@ class AppController:
         self.selected = selected
         self.settings.selected_profile_id = self.selected.profile_id
         save_settings(self.settings)
-        self._event(self._t("event.server_selected", name=self.selected.name))
+        self._event("event.server_selected", name=self.selected.name)
         was_connected = self.state["phase"] == "connected"
         if was_connected:
-            self._event(self._t("event.switching_server"))
+            self._event("event.switching_server")
             self.disconnect()
             self.connect()
         return {"ok": True, "id": self.selected.profile_id}
@@ -376,7 +395,7 @@ class AppController:
         except ProfileStoreError as exc:
             return {"ok": False, "error": self._render_profile_error(exc)}
         self._reload(profile.profile_id)
-        self._event(self._t("event.server_added_link", name=profile.name))
+        self._event("event.server_added_link", name=profile.name)
         return {"ok": True, **self._profiles_state()}
 
     def import_profile_file(self):
@@ -501,7 +520,7 @@ class AppController:
             self.settings.routing_mode = routing
             save_settings(self.settings)
             if changed and self.state["phase"] in ("connected", "connecting", "waiting"):
-                self._event(self._t("event.routing_changed"))
+                self._event("event.routing_changed")
                 self.disconnect()
                 self.connect()
         return {"ok": True, "routing": self.settings.routing_mode}
@@ -520,7 +539,7 @@ class AppController:
         except ProfileStoreError as exc:
             return {"ok": False, "error": self._render_profile_error(exc)}
         self._reload(self._selected_id())
-        self._event(self._t("event.subscription_added", name=sub.name))
+        self._event("event.subscription_added", name=sub.name)
         return {"ok": True, "summary": summary, **self._profiles_state()}
 
     def refresh_subscription(self, subscription_id):
@@ -529,7 +548,7 @@ class AppController:
         except ProfileStoreError as exc:
             return {"ok": False, "error": self._render_profile_error(exc)}
         self._reload(self._selected_id())
-        self._event(self._t("event.subscription_refreshed", count=count))
+        self._event("event.subscription_refreshed", count=count)
         return {"ok": True, "summary": summary, **self._profiles_state()}
 
     def delete_subscription(self, subscription_id):
@@ -544,7 +563,7 @@ class AppController:
         except ProfileStoreError as exc:
             return {"ok": False, "error": self._render_profile_error(exc)}
         self._reload(None if (self.selected is None or self.selected.subscription_id == subscription_id) else self.selected.profile_id)
-        self._event(self._t("event.subscription_deleted"))
+        self._event("event.subscription_deleted")
         return {"ok": True, **self._profiles_state()}
 
 
@@ -569,7 +588,7 @@ class AppController:
             return {"ok": False, "error": self._t("error.update_download", exc=exc)}
         if not updater.launch_installer(path):
             return {"ok": False, "error": self._t("error.update_launch")}
-        self._event(self._t("event.update_launching"))
+        self._event("event.update_launching")
         threading.Timer(1.0, self.exit_app).start()
         return {"ok": True}
 
@@ -577,7 +596,15 @@ class AppController:
     def check_sites(self, sites=None):
         items = sites or DEFAULT_SITES
         results = self.runtime.site_checks(items)
-        return [_dataclass_to_dict(r) for r in results]
+        return [
+            {
+                "name": r.name or self._t("sites.default_name"),
+                "url": r.url,
+                "ok": r.ok,
+                "detail": self._t(r.detail_key, **r.detail_params),
+            }
+            for r in results
+        ]
 
     def diagnostics_text(self):
         snap = self.runtime.diagnostics_snapshot()
@@ -589,7 +616,7 @@ class AppController:
             self._t("diag.profile", name=snap.get("profile_name")),
             self._t("diag.server", server=snap.get("server")),
             self._t("diag.public_ip", ip=snap.get("public_ip")),
-            self._t("diag.ping", ping=snap.get("ping_ms"), quality=snap.get("quality")),
+            self._t("diag.ping", ping=snap.get("ping_ms"), quality=self._t(snap["quality"]) if snap.get("quality") else ""),
             self._t("diag.interface", iface=snap.get("interface_name")),
             self._t("diag.time", time=snap.get("captured_at")),
             "",

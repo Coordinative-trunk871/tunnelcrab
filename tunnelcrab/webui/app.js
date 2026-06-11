@@ -376,16 +376,27 @@ $("seg-lang").querySelectorAll("button").forEach((b) => b.addEventListener("clic
 
 let _toggleBusy = false;
 let _toggleLast = 0;
+["pointerdown", "pointerup"].forEach((ev) => {
+  $("toggle").addEventListener(ev, (e) => {
+    try { window.pywebview.api.debug("toggle " + ev + " x=" + Math.round(e.offsetX) + " y=" + Math.round(e.offsetY)); } catch (err) {}
+  });
+});
 $("toggle").addEventListener("click", async () => {
   const now = Date.now();
-  if (_toggleBusy || now - _toggleLast < 700) return;
+  if (_toggleBusy || now - _toggleLast < 250) {
+    try { window.pywebview.api.debug("toggle ignored busy=" + _toggleBusy + " dt=" + (now - _toggleLast) + " phase=" + lastPhase); } catch (e) {}
+    return;
+  }
   _toggleLast = now;
   _toggleBusy = true;
-  let res;
-  try { res = await window.pywebview.api.toggle(); }
-  catch (e) { _toggleBusy = false; return; }
-  _toggleBusy = false;
-  if (res && res.ok === false && res.error === "no_profile") openNoServerModal();
+  try {
+    const res = await window.pywebview.api.toggle();
+    if (res && res.ok === false && res.error === "no_profile") openNoServerModal();
+  } catch (e) {
+  } finally {
+    _toggleBusy = false;
+  }
+  refresh();
 });
 $("min").addEventListener("click", () => window.pywebview.api.minimize());
 function fadeOutThen(fn) {

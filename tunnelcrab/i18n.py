@@ -20,7 +20,7 @@ TEXT = {
         "status.reconnecting": "Связь пропала, но мы уже возвращаемся",
         "status.cleanup_running": "Завершаю предыдущий туннель…",
 
-        "helper.add_subscription_hint": "Вставь ссылку на подписку в настройках — и крабик подключится",
+        "helper.add_subscription_hint": "Добавьте сервер или подписку — и крабик подключится",
         "helper.connecting": "Обычно пара секунд",
         "helper.connected": "Можно спокойно открывать нужные сайты",
         "helper.waiting_internet": "Как только сеть вернётся — крабик подключится сам",
@@ -32,7 +32,7 @@ TEXT = {
         "event.autoconnect": "Подключаюсь автоматически при запуске",
         "event.new_version": "Вышла новая версия {version}",
         "event.subs_refreshed": "Обновлены ключи из подписок: {total}",
-        "event.no_servers": "Пока нет ни одного сервера — добавь подписку",
+        "event.no_servers": "Пока нет ни одного сервера — добавьте сервер или подписку.",
         "event.disconnected": "Отключились",
         "event.server_selected": "Выбран сервер «{name}»",
         "event.switching_server": "Меняю сервер — переподключаюсь",
@@ -55,8 +55,20 @@ TEXT = {
         "notify.connected": "Подключились — можно открывать нужные сайты",
         "notify.hidden_tray": "Крабик спрятался в трей и ждёт тебя",
 
-        "ip.protected": "под защитой",
+        "ip.protected": "Под защитой",
         "ip.hidden": "скрыт",
+
+        "sites.opens": "Открывается",
+        "sites.status_code": "Статус {code}",
+        "sites.http_error": "Ошибка {code}",
+        "sites.unreachable": "Не получилось достучаться",
+        "sites.check_failed": "Не удалось проверить",
+        "sites.default_name": "Сайт",
+
+        "quality.unknown": "Неизвестно",
+        "quality.good": "Хорошо",
+        "quality.okay": "Нормально",
+        "quality.heavy": "Тяжеловато",
 
         "error.server_not_found": "Этот сервер уже не найден",
         "error.update_unavailable": "Обновление недоступно",
@@ -140,7 +152,7 @@ TEXT = {
         "status.reconnecting": "Connection dropped, but we're already coming back",
         "status.cleanup_running": "Finishing the previous tunnel…",
 
-        "helper.add_subscription_hint": "Paste a subscription link in settings — and the crab will connect",
+        "helper.add_subscription_hint": "Add a server or a subscription — and the crab will connect",
         "helper.connecting": "Usually a couple of seconds",
         "helper.connected": "You can safely open the sites you need",
         "helper.waiting_internet": "As soon as the network is back, the crab will connect on its own",
@@ -152,7 +164,7 @@ TEXT = {
         "event.autoconnect": "Connecting automatically on startup",
         "event.new_version": "A new version {version} is out",
         "event.subs_refreshed": "Keys refreshed from subscriptions: {total}",
-        "event.no_servers": "No servers yet — add a subscription",
+        "event.no_servers": "No servers yet — add a server or subscription.",
         "event.disconnected": "Disconnected",
         "event.server_selected": "Selected server “{name}”",
         "event.switching_server": "Switching server — reconnecting",
@@ -175,8 +187,20 @@ TEXT = {
         "notify.connected": "Connected — you can open the sites you need",
         "notify.hidden_tray": "The crab hid in the tray and is waiting for you",
 
-        "ip.protected": "protected",
+        "ip.protected": "Protected",
         "ip.hidden": "hidden",
+
+        "sites.opens": "Opens",
+        "sites.status_code": "Status {code}",
+        "sites.http_error": "Error {code}",
+        "sites.unreachable": "Couldn't reach it",
+        "sites.check_failed": "Couldn't check",
+        "sites.default_name": "Site",
+
+        "quality.unknown": "Unknown",
+        "quality.good": "Good",
+        "quality.okay": "Okay",
+        "quality.heavy": "Sluggish",
 
         "error.server_not_found": "This server can't be found anymore",
         "error.update_unavailable": "Update unavailable",

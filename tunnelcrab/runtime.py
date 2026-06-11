@@ -115,7 +115,8 @@ class SiteCheckResult:
     name: str
     url: str
     ok: bool
-    detail: str
+    detail_key: str
+    detail_params: dict
 
 
 @dataclass
@@ -457,12 +458,12 @@ class VpnRuntime:
     @staticmethod
     def classify_quality(ping_ms):
         if ping_ms is None:
-            return "Неизвестно"
+            return "quality.unknown"
         if ping_ms <= 70:
-            return "Хорошо"
+            return "quality.good"
         if ping_ms <= 150:
-            return "Нормально"
-        return "Тяжеловато"
+            return "quality.okay"
+        return "quality.heavy"
 
     def _read_traffic_point(self):
         if psutil is None:
@@ -504,7 +505,7 @@ class VpnRuntime:
         if not self.connected_at:
             return LiveMetrics(
                 ping_ms=None,
-                quality="Неизвестно",
+                quality="quality.unknown",
                 download_rate=0.0,
                 upload_rate=0.0,
                 downloaded_total=0,
@@ -549,9 +550,10 @@ class VpnRuntime:
     def site_checks(self, sites):
         results = []
         for item in sites:
-            name = item.get("name") or item.get("url") or "Сайт"
+            name = item.get("name") or item.get("url") or ""
             url = item.get("url") or ""
-            detail = "Не удалось проверить"
+            detail_key = "sites.check_failed"
+            detail_params = {}
             ok = False
             try:
                 request = urllib.request.Request(
@@ -560,15 +562,29 @@ class VpnRuntime:
                 )
                 with urllib.request.urlopen(request, timeout=8) as response:
                     ok = 200 <= response.status < 400
-                    detail = "Открывается" if ok else f"Статус {response.status}"
+                    if ok:
+                        detail_key = "sites.opens"
+                    else:
+                        detail_key = "sites.status_code"
+                        detail_params = {"code": response.status}
             except urllib.error.HTTPError as exc:
                 ok = False
-                detail = f"Ошибка {exc.code}"
+                detail_key = "sites.http_error"
+                detail_params = {"code": exc.code}
             except (OSError, urllib.error.URLError, TimeoutError):
                 ok = False
-                detail = "Не получилось достучаться"
+                detail_key = "sites.unreachable"
+                detail_params = {}
 
-            results.append(SiteCheckResult(name=name, url=url, ok=ok, detail=detail))
+            results.append(
+                SiteCheckResult(
+                    name=name,
+                    url=url,
+                    ok=ok,
+                    detail_key=detail_key,
+                    detail_params=detail_params,
+                )
+            )
 
         return results
 

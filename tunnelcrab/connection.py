@@ -87,7 +87,7 @@ class ConnectionSupervisor:
                     if not c.settings.auto_reconnect:
                         c.runtime.disconnect()
                         c._set_state("error", "status.connection_lost", "helper.reason", reason=self._friendly(drop_reason))
-                        c._event(c._t("event.connection_lost"))
+                        c._event("event.connection_lost")
                         c._notify(c._t("notify.connection_lost"))
                         c._sync_tray()
                         break
@@ -111,12 +111,12 @@ class ConnectionSupervisor:
             return self.desired
 
         c._set_state("waiting", "status.waiting_internet", "helper.waiting_internet")
-        c._event(c._t("event.no_internet_wait"))
+        c._event("event.no_internet_wait")
         c._sync_tray()
         while self.desired and not c.runtime.internet_available():
             time.sleep(3)
         if self.desired:
-            c._event(c._t("event.internet_back"))
+            c._event("event.internet_back")
         return self.desired
 
     def _attempt_connect(self):
@@ -129,7 +129,7 @@ class ConnectionSupervisor:
         except (OSError, ProfileError, ValueError) as exc:
             self._last_error = str(exc)
             c._set_state("error", "status.profile_bad", "helper.reason", reason=self._friendly(str(exc)))
-            c._event(c._t("event.error", exc=exc))
+            c._event("event.error", exc=exc)
             self.desired = False
             return "fatal"
 
@@ -137,10 +137,10 @@ class ConnectionSupervisor:
             core = "xray"
             c.settings.selected_core = "xray"
             save_settings(c.settings)
-            c._event(c._t("event.switched_xray"))
+            c._event("event.switched_xray")
 
         c._set_state("connecting", "status.connecting", "helper.connecting")
-        c._event(c._t("event.connecting_via", name=c.selected.name, core=core, mode=mode))
+        c._event("event.connecting_via", name=c.selected.name, core=core, mode=mode)
         c._sync_tray()
         try:
             report = c.runtime.connect(
@@ -159,13 +159,13 @@ class ConnectionSupervisor:
             c.runtime.disconnect()
             self._last_error = str(exc)
             c._set_state("error", "status.stumbled", "helper.reason", reason=self._friendly(str(exc)))
-            c._event(c._t("event.error", exc=exc))
+            c._event("event.error", exc=exc)
             return "fatal" if not self._can_retry(str(exc)) else "retry"
         except Exception as exc:
             c.runtime.disconnect()
             self._last_error = str(exc)
             c._set_state("error", "status.something_wrong", "helper.reason", reason=self._friendly(str(exc)))
-            c._event(c._t("event.error", exc=exc))
+            c._event("event.error", exc=exc)
             return "retry"
 
         if not self.desired:
@@ -177,9 +177,9 @@ class ConnectionSupervisor:
             "connected",
             "status.connected",
             "helper.connected",
-            ip=report.after_ip or c._t("ip.protected"),
+            ip=report.after_ip or "",
         )
-        c._event(c._t("event.connected_ip", ip=report.after_ip or c._t("ip.hidden")))
+        c._event("event.connected_ip", ip=report.after_ip or c._t("ip.hidden"))
         c._notify(c._t("notify.connected"))
         c._sync_tray()
         return "connected"
@@ -207,7 +207,7 @@ class ConnectionSupervisor:
             reason=self._friendly(reason),
             delay=delay,
         )
-        c._event(c._t("event.reconnect_in", delay=delay))
+        c._event("event.reconnect_in", delay=delay)
         c._sync_tray()
         waited = 0
         while self.desired and waited < delay:

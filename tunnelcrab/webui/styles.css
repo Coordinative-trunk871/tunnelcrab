@@ -106,19 +106,26 @@ body.booting { opacity: 0; }
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   margin: 6px 0 4px;
 }
+.connect-hitbox {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 0; background: transparent; padding: 0;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
 .connect-circle {
   width: 74px; height: 74px; border-radius: 50%;
   border: 4px solid var(--accent);
   background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 75%);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-size: 24px; color: var(--accent2);
   transition: transform .14s, box-shadow .3s, border-color .35s, background .35s, color .35s;
   box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 38%, transparent);
+  pointer-events: none;
 }
-.connect-icon { display: flex; }
+.connect-icon { display: flex; pointer-events: none; }
 .connect-icon svg { width: 28px; height: 28px; display: block; }
-.connect-circle:hover { transform: scale(1.07); box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 62%, transparent); }
-.connect-circle:active { transform: scale(0.94); }
+.connect-hitbox:hover .connect-circle { transform: scale(1.07); box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 62%, transparent); }
+.connect-hitbox:active .connect-circle { transform: scale(0.94); }
 .connect-hint { font-size: 11px; color: var(--soft); font-weight: 700; text-align: center; }
 
 @keyframes connectPulse {

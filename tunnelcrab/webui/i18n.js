@@ -52,7 +52,7 @@ const I18N = {
     "connecting.3": "Туннель готов",
 
     "dropdown.empty_title": "Пока нет серверов",
-    "dropdown.empty_sub": "Добавь подписку в настройках",
+    "dropdown.empty_sub": "Добавьте сервер или подписку.",
     "empty.title": "Серверов пока нет",
     "empty.body": "Добавьте сервер или импортируйте подписку, чтобы подключиться.",
     "traffic.session": "за сессию",
@@ -199,7 +199,7 @@ const I18N = {
     "connecting.3": "Tunnel ready",
 
     "dropdown.empty_title": "No servers yet",
-    "dropdown.empty_sub": "Add a subscription in settings",
+    "dropdown.empty_sub": "Add a server or subscription.",
     "empty.title": "No servers yet",
     "empty.body": "Add a server or import a subscription to connect.",
     "traffic.session": "this session",
